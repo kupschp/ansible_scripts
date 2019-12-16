@@ -1,0 +1,29 @@
+# playbook is for expanding LVM
+# Usage example: 
+#   test: ansible-playbook --check -i hosts disk.yml
+#   ansible-playbook -i hosts disk.yml
+# Test:
+#   ansible-playbook -i hosts --check disk.yml
+---
+- hosts: vm
+  become: yes
+  become_user: root
+  tasks:
+    - name: create pv
+      lvg:
+        pvs: "{{ disks }}"
+        state: present
+        vg: "{{ vg }}"
+    - name: resize vg
+      lvg:
+        vg: "{{ vg }}"
+        pvs: "{{ disks }}"
+        pesize: "{{ size }}" 
+    - name: resize lv 
+      lvol:
+        lv: "{{ lv }}"
+        vg: "{{ vg }}"
+        size: +100%FREE
+        resizefs: true
+        opts: --autobackup n
+        shrink: no

@@ -1,0 +1,8 @@
+vm:
+    hosts:
+        stores1.domain.com # replace the host name you wanted to expand lvm
+    vars:
+        disks: /dev/sda1 # add all physical devices present in this logical volume and the additional physical device
+        lv: [LVNAME] #insert LVNAME
+        vg: [VGNAME] #insert VGNAME
+        size: 35g # change with the total size of disk
