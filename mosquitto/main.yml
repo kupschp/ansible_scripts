@@ -1,0 +1,28 @@
+---
+- name: mosquitto mqtt broker
+  hosts: ../lvm-resize/hosts
+  become: true
+  tasks:
+    - name: certs
+      copy:
+        src: "{{ item }}"
+        dest: "/etc/mosquitto/certs/{{ item }}"
+      with_items:
+        - "./certs/mosquitto.crt"
+        - "./certs/mosquitto.key"
+
+    - name: conf_mosq
+      copy:
+        src: "./conf/mosquitto.conf"
+        dest: "/etc/mosquitto/mosquitto.conf"
+
+    - name: install_mosq
+      package:
+        name: mosquitto
+        state: present
+
+    - name: run_mosq
+      service:
+        name: mosquitto
+        state: started
+        enabled: true
